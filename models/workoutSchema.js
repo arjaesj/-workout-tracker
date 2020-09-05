@@ -42,7 +42,21 @@ const WorkoutSchema = new Schema({
         }
     ],
 },
+    {
+        toJSON: {
+            virtuals: true
+        }
+    }
 );
+
+// defining a virtual attribute, to print the total workout duration after a new workout is added
+WorkoutSchema.virtual("totalDuration").get(function () {
+    // running reduce function to return a single output value for totalDuration
+    return this.exercises.reduce((total, time) => {
+        // returning total + time.duration
+        return total + time.duration
+    }, 0)
+})
 
 const Workout = mongoose.model("Workout", WorkoutSchema);
 module.exports = Workout;
